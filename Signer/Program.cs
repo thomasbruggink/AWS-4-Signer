@@ -7,6 +7,12 @@ namespace AwsSigning
     {
         static void Main(string[] args)
         {
+            //Send();
+            Verify();
+        }
+
+        private static void Send()
+        {
             var config = new AwsConfig
             {
                 Region = "eu-west-1",
@@ -30,6 +36,11 @@ namespace AwsSigning
             var result = client.SendAsync(request).GetAwaiter().GetResult();
             result.EnsureSuccessStatusCode();
             Console.WriteLine("All good");
+        }
+
+        private static void Verify()
+        {
+
         }
     }
 }

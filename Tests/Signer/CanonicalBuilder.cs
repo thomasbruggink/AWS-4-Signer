@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AwsSigning;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests.Signer
 {
     /// <summary>
     /// This class builds up everything from:

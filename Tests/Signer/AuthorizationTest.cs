@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AwsSigning;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests.Signer
 {
     /// <summary>
     /// https://docs.aws.amazon.com/general/latest/gr/sigv4-add-signature-to-request.html

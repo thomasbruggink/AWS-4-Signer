@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Text;
 using AwsSigning;
 
-namespace Tests
+namespace Tests.Signer
 {
     class Helpers
     {
