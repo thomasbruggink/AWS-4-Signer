@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
+using AwsSigning.Configuration;
+using AwsSigning.Helpers;
 
 namespace AwsSigning
 {
@@ -57,8 +59,8 @@ namespace AwsSigning
             };
             request.Headers.Add("x-amz-sns-message-type", "Notification");
 
-            var result = AwsValidator.Verify(config, request).GetAwaiter().GetResult();
-            Console.WriteLine(result);
+            //var result = AwsValidator.Verify(request).GetAwaiter().GetResult();
+            //Console.WriteLine(result);
         }
     }
 }

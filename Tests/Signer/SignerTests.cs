@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using AwsSigning;
+using AwsSigning.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Signer

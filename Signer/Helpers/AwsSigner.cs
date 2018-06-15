@@ -8,8 +8,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using AwsSigning.Configuration;
 
-namespace AwsSigning
+namespace AwsSigning.Helpers
 {
     /// <summary>
     /// This class helps create an AWS signed authorization header
@@ -192,7 +193,7 @@ namespace AwsSigning
         public string BuildSignedHeaders(string canonicalHeaders)
         {
             // Keys should be lower cased but since we use the canonicalheaders output this is already the case
-            return string.Join(';', canonicalHeaders.Split('\n').Where(k => !string.IsNullOrWhiteSpace(k)).Select(k => k.Split(':').First().ToLower()));
+            return string.Join(";", canonicalHeaders.Split('\n').Where(k => !string.IsNullOrWhiteSpace(k)).Select(k => k.Split(':').First().ToLower()));
         }
 
         /// <summary>
@@ -260,7 +261,7 @@ namespace AwsSigning
                     let value = Uri.EscapeDataString(parsedQueryString[queryParam]) 
                         select $"{key}={value}").ToList();
 
-            return string.Join('&', normalizedParams);
+            return string.Join("&", normalizedParams);
         }
 
         /// <summary>

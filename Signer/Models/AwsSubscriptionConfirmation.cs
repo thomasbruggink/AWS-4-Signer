@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace AwsSigning.Models
 {
@@ -22,17 +20,16 @@ namespace AwsSigning.Models
 
         public override string CreateSigningString()
         {
-            var input = new List<KeyValuePair<string, string>>
+            return BuildSigningString(new List<KeyValuePair<string, string>>
             {
                 new KeyValuePair<string, string>("Message", Message),
                 new KeyValuePair<string, string>("MessageId", MessageId),
+                new KeyValuePair<string, string>("SubscribeURL", SubscribeURL),
                 new KeyValuePair<string, string>("Timestamp", Timestamp.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")),
+                new KeyValuePair<string, string>("Token", Token),
                 new KeyValuePair<string, string>("TopicArn", TopicArn),
                 new KeyValuePair<string, string>("Type", Type.ToString())
-            };
-            if (SubscribeURL != null)
-                input.Add(new KeyValuePair<string, string>("SubscribeURL", SubscribeURL));
-            return BuildSigningString(input);
+            });
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
-using AwsSigning;
+using AwsSigning.Configuration;
 
 namespace Tests.Signer
 {
