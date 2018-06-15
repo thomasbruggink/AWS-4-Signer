@@ -65,7 +65,7 @@ namespace AwsSigning.Models
                 output.Add(keyValuePair.Key);
                 output.Add(keyValuePair.Value);
             }
-            return string.Join('\n', output);
+            return string.Join('\n', output) + '\n';
         }
     }
 }

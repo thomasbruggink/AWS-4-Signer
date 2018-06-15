@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text;
 
 namespace AwsSigning
 {
@@ -40,7 +41,24 @@ namespace AwsSigning
 
         private static void Verify()
         {
+            var config = new AwsConfig
+            {
+                Region = "eu-west-1",
+                Service = "ses",
+                AccessId = "<ACCESS_ID>",
+                Secret = "<SECRET>"
+            };
 
+            const string input = "<EXAMPLE_INPUT>";
+            
+            var request = new HttpRequestMessage
+            {
+                Content = new StringContent(input, Encoding.UTF8, "application/json")
+            };
+            request.Headers.Add("x-amz-sns-message-type", "Notification");
+
+            var result = AwsValidator.Verify(config, request).GetAwaiter().GetResult();
+            Console.WriteLine(result);
         }
     }
 }

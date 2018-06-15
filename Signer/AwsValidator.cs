@@ -34,16 +34,10 @@ namespace AwsSigning
             var certificate = await validator.DownloadCertificate(new Uri(content.SigningCertURL));
             if (certificate == null)
                 return false;
-            var publicKey = (RSACryptoServiceProvider) certificate.PublicKey.Key;
+            var publicKey = certificate.GetRSAPublicKey();
 
             var signString = content.CreateSigningString();
-            using (var signer = new AwsSigner())
-            {
-                var signingKey = signer.CreateSigningKey(config.Secret, content.Timestamp, config.Region, config.Service);
-                var derivedSignature = signer.CreateSignature(signingKey, signString);
-                var assertedSignature = publicKey.Decrypt(Convert.FromBase64String(content.Signature), false);
-                return derivedSignature.Equals(assertedSignature);
-            }
+            return publicKey.VerifyData(Encoding.UTF8.GetBytes(signString), Convert.FromBase64String(content.Signature), HashAlgorithmName.SHA1, RSASignaturePadding.Pkcs1);
         }
 
         public string BuildSigningString(AwsBase message)
@@ -51,16 +45,16 @@ namespace AwsSigning
             return message.CreateSigningString();
         }
 
-        private X509Certificate2 ParseCertificate(string certData)
+        private X509Certificate2 ParseCertificate(byte[] certData)
         {
-            return new X509Certificate2(certData, string.Empty);
+            return new X509Certificate2(certData);
         }
 
         public async Task<X509Certificate2> DownloadCertificate(Uri endpoint)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
             var result = await _httpClient.SendAsync(request);
-            var content = await result.Content.ReadAsStringAsync();
+            var content = await result.Content.ReadAsByteArrayAsync();
             return ParseCertificate(content);
         }
 
