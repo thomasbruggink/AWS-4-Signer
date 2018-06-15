@@ -25,7 +25,7 @@ namespace Tests.Validator
             expectedBuilder.Append("TopicArn\n");
             expectedBuilder.Append("arn:aws:sns:us-west-2:123456789012:MyTopic\n");
             expectedBuilder.Append("Type\n");
-            expectedBuilder.Append("Notification");
+            expectedBuilder.Append("Notification\n");
 
             var content = validator.ParseContent(MessageType.Notification, Helpers.NotificationContent);
             var result = validator.BuildSigningString(content);
@@ -50,7 +50,7 @@ namespace Tests.Validator
             expectedBuilder.Append("TopicArn\n");
             expectedBuilder.Append("arn:aws:sns:us-west-2:123456789012:MyTopic\n");
             expectedBuilder.Append("Type\n");
-            expectedBuilder.Append("SubscriptionConfirmation");
+            expectedBuilder.Append("SubscriptionConfirmation\n");
 
             var content = validator.ParseContent(MessageType.SubscriptionConfirmation, Helpers.SubscriptionContent);
             var result = validator.BuildSigningString(content);
