@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace AwsSigning.Models
 {
@@ -65,7 +64,7 @@ namespace AwsSigning.Models
                 output.Add(keyValuePair.Key);
                 output.Add(keyValuePair.Value);
             }
-            return string.Join('\n', output) + '\n';
+            return string.Join("\n", output) + "\n";
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿using System;
-using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using AwsSigning.Models;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace AwsSigning
+namespace AwsSigning.Helpers
 {
     public class AwsValidator
     {
@@ -21,13 +21,13 @@ namespace AwsSigning
             _httpClient = new HttpClient();
         }
 
-        public static async Task<bool> Verify(AwsConfig config, HttpRequestMessage request)
+        public static async Task<bool> Verify(Stream body, IHeaderDictionary headers)
         {
             var validator = new AwsValidator();
-            var type = validator.ParseMessageType(request);
+            var type = validator.ParseMessageType(headers);
             if (type == MessageType.None)
                 return false;
-            var content = validator.ParseContent(type, await request.Content.ReadAsStringAsync());
+            var content = validator.ParseContent(type, new StreamReader(body).ReadToEnd());
             if(content == null)
                 return false;
 
@@ -75,15 +75,15 @@ namespace AwsSigning
             }
         }
 
-        public MessageType ParseMessageType(HttpRequestMessage request)
+        public MessageType ParseMessageType(IHeaderDictionary request)
         {
             const string messageTypeHeader = "x-amz-sns-message-type";
-            if (!request.Headers.Contains(messageTypeHeader))
+            if (!request.ContainsKey(messageTypeHeader))
                 return MessageType.None;
-            var headers = request.Headers.GetValues(messageTypeHeader).ToList();
+            var headers = request[messageTypeHeader];
             if (headers.Count != 1)
                 return MessageType.None;
-            return !Enum.TryParse(typeof(MessageType), headers.First(), out var type) ? MessageType.None : (MessageType) type;
+            return !Enum.TryParse<MessageType>(headers.First(), out var type) ? MessageType.None : (MessageType) type;
         }
     }
 }

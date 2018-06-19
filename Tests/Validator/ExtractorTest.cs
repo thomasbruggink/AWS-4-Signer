@@ -1,5 +1,6 @@
-﻿using AwsSigning;
+﻿using AwsSigning.Helpers;
 using AwsSigning.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Validator
@@ -11,10 +12,10 @@ namespace Tests.Validator
         public void TypeExtractTest()
         {
             var validator = new AwsValidator();
-            var request = Helpers.CreateSubscriptionRequest();
+            var headers = Helpers.CreateSubscriptionHeaders();
 
             var expectedType = MessageType.SubscriptionConfirmation;
-            var actual = validator.ParseMessageType(request);
+            var actual = validator.ParseMessageType(headers);
 
             Assert.AreEqual(expectedType, actual, "Type Extractor failed");
         }
@@ -23,12 +24,12 @@ namespace Tests.Validator
         public void TypeExtractTestNotification()
         {
             var validator = new AwsValidator();
-            var request = Helpers.CreateSubscriptionRequest();
-            request.Headers.Remove("x-amz-sns-message-type");
-            request.Headers.Add("x-amz-sns-message-type", "Notification");
+            var headers = Helpers.CreateSubscriptionHeaders();
+            headers.Remove("x-amz-sns-message-type");
+            headers.Add("x-amz-sns-message-type", "Notification");
 
             var expectedType = MessageType.Notification;
-            var actual = validator.ParseMessageType(request);
+            var actual = validator.ParseMessageType(headers);
 
             Assert.AreEqual(expectedType, actual, "Type Extractor failed");
         }
@@ -37,12 +38,12 @@ namespace Tests.Validator
         public void TypeExtractTestEmptyString()
         {
             var validator = new AwsValidator();
-            var request = Helpers.CreateSubscriptionRequest();
-            request.Headers.Remove("x-amz-sns-message-type");
-            request.Headers.Add("x-amz-sns-message-type", string.Empty);
+            var headers = Helpers.CreateSubscriptionHeaders();
+            headers.Remove("x-amz-sns-message-type");
+            headers.Add("x-amz-sns-message-type", string.Empty);
 
             var expectedType = MessageType.None;
-            var actual = validator.ParseMessageType(request);
+            var actual = validator.ParseMessageType(headers);
 
             Assert.AreEqual(expectedType, actual, "Type Extractor failed");
         }
@@ -51,11 +52,11 @@ namespace Tests.Validator
         public void TypeExtractTestRemoved()
         {
             var validator = new AwsValidator();
-            var request = Helpers.CreateSubscriptionRequest();
-            request.Headers.Remove("x-amz-sns-message-type");
+            var headers = Helpers.CreateSubscriptionHeaders();
+            headers.Remove("x-amz-sns-message-type");
 
             var expectedType = MessageType.None;
-            var actual = validator.ParseMessageType(request);
+            var actual = validator.ParseMessageType(headers);
 
             Assert.AreEqual(expectedType, actual, "Type Extractor failed");
         }
@@ -64,11 +65,11 @@ namespace Tests.Validator
         public void TypeExtractTestMultiple()
         {
             var validator = new AwsValidator();
-            var request = Helpers.CreateSubscriptionRequest();
-            request.Headers.Add("x-amz-sns-message-type", "Notificaton");
+            var headers = Helpers.CreateSubscriptionHeaders();
+            headers.Append("x-amz-sns-message-type", "Notificaton");
 
             var expectedType = MessageType.None;
-            var actual = validator.ParseMessageType(request);
+            var actual = validator.ParseMessageType(headers);
 
             Assert.AreEqual(expectedType, actual, "Type Extractor failed");
         }

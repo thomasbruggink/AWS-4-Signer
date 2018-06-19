@@ -2,7 +2,8 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using AwsSigning;
+using AwsSigning.Configuration;
+using AwsSigning.Helpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Signer
